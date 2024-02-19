@@ -16,7 +16,6 @@ const WeatherCard = ({ date, weatherCode, windspeed, temprature }) => {
       <h2 className="date">{getDayName(date)}</h2>
 
       <div className="image_container">
-        {console.log(weatherCode)}
         <img src={ImageData[weatherCode]?.day?.image} alt="" />
       </div>
 
