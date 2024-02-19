@@ -86,7 +86,7 @@ function App() {
     <>
       <Header />
       <main>
-        <Input type="text" placeholder="Enter a Location" clearData={clearData} value={value} setValue={setValue} keyPress={keyPress} handleChange={handleChange} />
+        <Input type="text" placeholder="Enter a Location" value={value} setValue={setValue} keyPress={keyPress} handleChange={handleChange} />
         <div className="container">
           {loading && <div>Loading...</div>}
           {weatherData &&
