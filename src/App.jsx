@@ -6,6 +6,7 @@ import axios from "axios";
 
 function App() {
   const [weatherData, setWeatherData] = useState([]);
+  const [error, setError] = useState({});
   const [cachedData, setCachedData] = useState({});
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
@@ -29,7 +30,6 @@ function App() {
     // Caching data to prevent repeated Network Requests
     if (cachedData[value]) {
       setWeatherData(cachedData[value]);
-      console.log(cachedData);
       setLoading(false);
       return;
     }
@@ -38,7 +38,8 @@ function App() {
       const searchName = await axios.get(`https://geocoding-api.open-meteo.com/v1/search?name=${value}&count=1&language=en&format=json`);
 
       if (!searchName?.data?.results) {
-        console.log("There was an error finding your Location!");
+        setError({ location: "There was an error finding your Location!" });
+        console.log(error);
         setLoading(false);
         return;
       }
@@ -54,7 +55,7 @@ function App() {
       }
 
       const dailyData = response.data.daily;
-      console.log(dailyData);
+      setError({ location: "" });
 
       let data = [];
       for (let index = 1; index < 6; index++) {
@@ -69,14 +70,13 @@ function App() {
       setWeatherData(data);
       setCachedData({ ...cachedData, [value]: data });
       setLoading(false);
-      console.log("Data converted and added");
     } catch (error) {
       console.error("Error fetching data:", error);
       setLoading(false);
     }
   };
 
-  const keyPress = async (e) => {
+  const keyPress = (e) => {
     if (e.key === "Enter" && value !== "" && value.length > 1) {
       fetchData();
     }
@@ -88,6 +88,7 @@ function App() {
       <main>
         <Input type="text" placeholder="Enter a Location" value={value} setValue={setValue} keyPress={keyPress} handleChange={handleChange} />
         <div className="container">
+          {error.location && <h2>{error.location}</h2>}
           {loading && <div>Loading...</div>}
           {weatherData &&
             weatherData.map((item) => {
